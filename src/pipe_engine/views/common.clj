@@ -1,12 +1,15 @@
 (ns pipe-engine.views.common
-  (:use [noir.core :only [defpartial]]
-        [hiccup.page-helpers :only [include-css html5]]))
+  (:require [noir.response :as res]
+            [pipe-engine.models.functions :as fun])
+  (:use [noir.core :only [defpage]]
+        [hiccup.core :only [html]]))
 
-(defpartial layout [& content]
-            (html5
-              [:head
-               [:title "pipe-engine"]
-               (include-css "/css/reset.css")]
-              [:body
-               [:div#wrapper
-                content]]))
+(defpage "/" []
+  (res/redirect "/index.html"))
+
+(defpage [:put "/run"] {:keys [req]}
+  (res/json {:error "not implement" :req req} ))
+
+
+(defpage "/functions" []
+  (res/json fun/list-functions))
