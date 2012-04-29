@@ -5,13 +5,27 @@
     <title>Pipe Engine</title>
     <link rel="stylesheet" type="text/css" href="css/layout.css" />
 
+<!-- JIT Css Files -->
+<!-- <link type="text/css" href="css/base.css" rel="stylesheet" /> -->
+<link type="text/css" href="css/ForceDirected.css" rel="stylesheet" />
+
+<!-- JIT Library File -->
+<script language="javascript" type="text/javascript" src="jit/jit-yc.js"></script>
+
+<!-- JIT Example File -->
+<script language="javascript" type="text/javascript" src="example1.js"></script>
   </head>
-  <body>
+   <!-- init() JIT Example On load -->
+
+    <body onload="init();">
     <div id="container">
         <div id="palette_area"></div>
         <div id="canvas_area">canvas</div>
         <div id="property_area">property</div>
         <div id="details_area">details</div>
+            <div id="infovis"></div>    
+    <div id="log"></div>    
+
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>

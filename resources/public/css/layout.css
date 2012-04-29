@@ -26,3 +26,11 @@
     min-height: 200px;
     clear: both;
 }
+
+#infovis {
+    background-color: #DEF;
+    min-height: 200px;
+    min-width: 300px;
+    background-color: #EEF;
+    clear: both;
+}
