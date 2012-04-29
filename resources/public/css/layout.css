@@ -1,0 +1,36 @@
+#container {
+}
+#palette_area {
+    background-color: #DDD;
+    min-width: 200px;
+    width: 200px;
+    float: left;
+}
+
+#canvas_area {
+    background-color: #420;
+    height: 400px;
+    min-width: 400px;
+    float: left;
+}
+
+#property_area {
+    background-color: #9FF;
+    height: 400px;
+    min-width: 200px;
+    float: left;
+}
+
+#details_area {
+    background-color: #DEF;
+    min-height: 200px;
+    clear: both;
+}
+
+#infovis {
+    background-color: #DEF;
+    min-height: 200px;
+    min-width: 300px;
+    background-color: #EEF;
+    clear: both;
+}
