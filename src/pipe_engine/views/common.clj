@@ -1,6 +1,8 @@
 (ns pipe-engine.views.common
-  (:require [noir.response :as res]
-            [pipe-engine.models.functions :as fun])
+  (:require
+   [clojure.repl]
+   [noir.response :as res]
+   [pipe-engine.models.functions :as fun])
   (:use [noir.core :only [defpage]]
         [hiccup.core :only [html]]))
 
@@ -13,3 +15,4 @@
 
 (defpage "/functions" []
   (res/json fun/list-functions))
+

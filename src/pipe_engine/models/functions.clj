@@ -1,12 +1,24 @@
 (ns pipe-engine.models.functions
   (:require [ clojure.repl :as repl]
-            [ grotesql.functions :as f])
-  )
+            [grotesql.functions]
+            [grotesql.input]
+            [grotesql.multi-input]
+            [grotesql.output]))
+
+
 
 (defn export-function  [fun]
-  {:name (str fun)
-   :source (repl/source-fn fun)
-   :doc (:doc (meta (resolve fun)))})
+  (let [r (resolve fun) m (meta r)]
+    {:name (str (:name m))
+     :ns (str (:ns  m))
+     :file (:file m)
+     :source (repl/source-fn fun)
+     :doc (:doc m)}))
 
-(def function-list ['f/drop-columns 'f/str-columns 'count])
+(def function-list '(grotesql.input/input-csv
+                     grotesql.multi-input/simple-join
+                     grotesql.functions/drop-columns
+                     grotesql.functions/str-columns
+                     grotesql.output/output-csv))
+
 (def list-functions (map export-function function-list))
