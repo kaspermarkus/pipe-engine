@@ -12,8 +12,10 @@
     {:name (str (:name m))
      :ns (str (:ns  m))
      :file (:file m)
-     :source (repl/source-fn fun)
-     :doc (:doc m)}))
+     :source (repl/source-fn fun) 
+     :doc (:doc m)
+     :parameters (:parameters m)
+     :connections (:connections m)}))
 
 (def function-list '(grotesql.input/input-csv
                      grotesql.multi-input/simple-join

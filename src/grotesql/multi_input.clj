@@ -10,12 +10,19 @@
     join2: The column to join in table2
     table1: The first table to join on
     table2: The second table to join on"
+    {:parameters
+     {:join1 {:type "column-header"}
+      :join2 {:type "column-header"}
+      :table1 {:type "table"}
+      :table2 {:type "table"}}
+     :connections [1 1]}
+    
     ([ join1 join2 table1 table2 ]
-        (flatten 
-            (map 
-                (fn [ t1 ]
-                    (filter #(not (nil? %)) 
-                        (map 
-                            (fn [ t2 ] (if (= (get t1 join1) (get t2 join2)) (merge t1 t2)))
-                            table2)))                   
-                table1)))) 
+       (flatten 
+        (map 
+         (fn [ t1 ]
+           (filter #(not (nil? %)) 
+                   (map 
+                    (fn [ t2 ] (if (= (get t1 join1) (get t2 join2)) (merge t1 t2)))
+                    table2)))                   
+         table1)))) 

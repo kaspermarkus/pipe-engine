@@ -7,6 +7,7 @@
 
     Arguments:
     table: the data to print"
+    
     [ table ]
     (do
         (println (apply str (interpose ", " (map name (keys (first table))))))
@@ -18,9 +19,15 @@
     filename: the file to write (string)
     separator: the separator of the csv file (char)
     header?: true if the first line of the .csv file should be a headers (boolean)"
+    {:parameters
+     {:filename {:type "file"}
+      :separator {:type "char"}
+      :header? {:type "boolean"}
+      :table {:type "table"}}
+     :connections [1 1]
+     }
     [ filename separator header? table ]
-    (let 
-        [ data-body (map (fn [row] (vec (vals row))) table) 
+    (let [ data-body (map (fn [row] (vec (vals row))) table) 
           out-data (if header? 
             (cons (vec (map name (keys (first table)))) data-body) 
             data-body)]

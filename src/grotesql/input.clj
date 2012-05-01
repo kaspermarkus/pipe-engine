@@ -2,13 +2,18 @@
 (require '[clojure.data.csv :as csv]
          '[clojure.java.io :as io])
 
-(defn ^{:params {:filename "file" }} input-csv 
+(defn input-csv 
     "Reads .csv file (comma separated values) and returns the data.
 
     filename: the file to read (string)
     separator: the separator of the csv file (char)
     header?: true if the first line of the .csv file contains headers (boolean)
     numlines: OPTIONAL - the number of lines to read from output"
+    {:parameters
+     {:filename {:type "file"}
+      :separator {:type "char"}
+      :header?  {:type "boolean"}}
+     :connections [0 1]}
     ([ filename separator header? ]
         (let [ 
             full-input (with-open [in-file (io/reader filename)] (doall (csv/read-csv in-file :separator separator)))
