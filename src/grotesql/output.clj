@@ -24,7 +24,7 @@
       :separator {:type "char"}
       :header? {:type "boolean"}
       :table {:type "table"}}
-     :connections [1 1]
+      :connections [1 0]
      }
     [ filename separator header? table ]
     (let [ data-body (map (fn [row] (vec (vals row))) table) 

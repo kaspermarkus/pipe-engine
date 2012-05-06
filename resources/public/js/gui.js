@@ -1,73 +1,3 @@
-var functions_list = { 
-    "input-csv": {
-        "source": "string",
-        "docstring": "input csv doc",
-        "parameters": {
-            "filename": {
-                "type": "file"
-            },
-            "header?": {
-                "type": "boolean"
-            },
-            "separator": {
-                "type": "char"
-            }
-        },
-        "connections": [ 0, 1 ]
-    }, 
-    "output-csv": {
-        "source": "string",
-        "docstring": "output csv doc",
-        "parameters": {
-            "filename": {
-                "type": "file"
-            },
-            "header?": {
-                "type": "boolean"
-            },
-            "separator": {
-                "type": "char"
-            }
-        },
-        "connections": [ 1, 0 ]
-    }, 
-    "drop-columns": {
-        "source": "string",
-        "docstring": "string",
-        "parameters": {
-            "keys": {
-                "type": "array",
-                "details": {
-                    "type": "column-header"
-                }
-            },
-            "table": {
-                "type": "table"
-            }
-        },
-        "connections": [ 1, 1 ]
-    },
-    "str-columns": {
-        "source": "string",
-        "docstring": "string",
-        "parameters": {
-            "key1": {
-                "type": "column-header"
-            },
-            "key2": {
-                "type": "column-header"
-            },
-            "separator": {
-                "type": "string"
-            },
-            "table": {
-                "type": "table"
-            }
-        },
-        "connections": [ 0, 1 ]
-    }
-}; 
-
 // init data
   var json = [
       {
@@ -147,9 +77,9 @@ function nodeEditor(node) {
     }
   }
   html += "</fieldset>";
-        //append connections information
-        $jit.id('property_area').innerHTML = html;
-      }
+  //append connections information
+  $jit.id('property_area').innerHTML = html;
+}
 
 (function($){
   var GraphModel = Backbone.Model.extend({
@@ -212,6 +142,7 @@ function nodeEditor(node) {
         // Add node events
         Events: {
           enable: true,
+          enableForEdges: true,
           type: 'Native',
           //Change cursor style when hovering a node
           onMouseEnter: function() {
@@ -231,9 +162,16 @@ function nodeEditor(node) {
             $jit.util.event.stop(e); //stop default touchmove event
             this.onDragMove(node, eventInfo, e);
           },
+          onRightClick: function(node, eventInfo, e) {
+            var that = this;
+            node.Config.color = "#888";
+            node.Config.selected = true;
+            graphModel.fd.plot();
+
+          },
           //Add also a click handler to nodes
-          onClick: function(node) {
-            if(!node) return;
+          onClick: function(node, eventInfo, e) {
+            if (!node) return;
             nodeEditor(node);
             // Build the right column relations list.
             // This is done by traversing the clicked node connections.
@@ -328,8 +266,7 @@ function nodeEditor(node) {
   });
   var detailsView = new DetailsView();
 
-  var NodeTemplate = Backbone.Model.extend({
-  });
+  var NodeTemplate = Backbone.Model.extend({});
 
   var NodeTemplateView = Backbone.View.extend({
     tagName: 'li', // name of (orphan) root tag in this.el
@@ -343,82 +280,43 @@ function nodeEditor(node) {
       _.bindAll(this, 'render', 'explode'); // every function that uses 'this' as the current object should be in here
     },
     render: function(){
-      $(this.el).html('<span id="'+this.model.get('id')+'">'+this.model.get('id')+'</span>');
+      $(this.el).html('<span id="'+this.model.get('name')+'">'+this.model.get('name')+'</span>');
       return this; // for chainable calls, like .render().el
     },
     explode: function(evt) {
       if (evt.type === "mouseenter") {
-        this.detailsView.updateMsg("<div id='node_documentation'><h3>Node Documentation</h3><p>"+
-          this.model.get('properties').docstring+"</p></div>");
+        this.detailsView.updateMsg("<div id='node_documentation'><h3>Documentation: "+
+          this.model.get('name')+"</h3><p><pre>"+
+          this.model.get('doc')+"</pre></p></div>");
       } else {
         this.detailsView.clearMsg();
       }
     },
     addNode: function(evt) {
-      var id = this.model.get('id');
-      var props = this.model.get('properties');
+      var id = this.model.get('name');
       var node = {};
       node.id = id;
       node.name = id;
       node.data = {};
-      node.data.ql = props.parameters;
+      node.data.ql = this.model.get('parameters');
       node.data.meta = {
-        maxInputs: props.connections[0],
-        maxOutputs: props.connections[1]
+        maxInputs: this.model.get('connections')[0],
+        maxOutputs: this.model.get('connections')[1]
       };
-    //     "input-csv": {
-    //     "source": "string",
-    //     "docstring": "input csv doc",
-    //     "parameters": {
-    //         "filename": {
-    //             "type": "file"
-    //         },
-    //         "header?": {
-    //             "type": "boolean"
-    //         },
-    //         "separator": {
-    //             "type": "char"
-    //         }
-    //     },
-    //     "connections": [ 0, 1 ]
-    // }, 
-    //   {
-    //     "id": "csv-output1",
-    //     "name": "csv-output1",
-    //     "data": {
-    //       //"$type": "circle",
-    //       "ql": {
-    //          filename: { value: "some other name", type: "file" },
-    //          header: { value: true, type: "boolean" },
-    //          separator: { value: ',', type: "char" }
-    //       }
-    //     }
-    //   }
-     // console.log(node);
       json.push(node);
       console.log(json);
-      graphGui.loadJSON(json);
-      graphGui.computeIncremental({
-    iter: 40,
-    property: 'end',
-    onStep: function(perc){
-      Log.write(perc + '% loaded...');
-    },
-    onComplete: function(){
-      Log.write('done');
-      graphGui.animate({
-        modes: ['linear'],
-        transition: $jit.Trans.Elastic.easeOut,
-        duration: 2500
-      });
-    }
-  });
-
+     graph.set({ graph: json });
+     graph.drawGraph();
     }
   });
 
   var Palette = Backbone.Collection.extend({
-    model: NodeTemplate
+    model: NodeTemplate,
+    url: "/functions",
+    // initialize: function (test2) {
+    //   this.fetch();
+    //   var test = test2;
+    // }
   });
   
   var PaletteView = Backbone.View.extend({
@@ -428,11 +326,14 @@ function nodeEditor(node) {
     },
     initialize: function(){
       _.bindAll(this, 'render', 'addNodeTemplate', 'renderNodeTemplate'); // every function that uses 'this' as the current object should be in here
-      
+      var that = this;
       this.collection = new Palette();
-      this.collection.bind('add', this.renderNodeTemplate); // collection event binder
-
-      this.render();
+      this.collection.fetch({
+        success: function(a, b) {
+          that.collection.bind('add', this.renderNodeTemplate); // collection event binder
+          that.render();
+        }
+      });
     },
     render: function(){
       var self = this;
@@ -465,11 +366,7 @@ function nodeEditor(node) {
   //var graphGui = init(json);
   //graphGui.updateGraph(json);
   var paletteView = new PaletteView();  
-  
-  $.each(functions_list, function (node_id, props) {
-      console.log(node_id);
-      paletteView.addNodeTemplate(node_id, props);
-  });
+
   detailsView.updateMsg("<h1>Kasper</h1>");
   var graph = new GraphModel();
   graph.set({ graph: json });

@@ -19,7 +19,7 @@
     :key2 {:type "column-header"}
     :separator {:type "string"}
     :table {:type "table"}}
-   :connections [0 1]}
+   :connections [1 1]}
   
   [ key1 key2 newkey separator table ]
   (map (fn [row] 

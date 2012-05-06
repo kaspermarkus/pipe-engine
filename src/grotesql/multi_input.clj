@@ -15,7 +15,7 @@
       :join2 {:type "column-header"}
       :table1 {:type "table"}
       :table2 {:type "table"}}
-     :connections [1 1]}
+     :connections [2 1]}
     
     ([ join1 join2 table1 table2 ]
        (flatten 
